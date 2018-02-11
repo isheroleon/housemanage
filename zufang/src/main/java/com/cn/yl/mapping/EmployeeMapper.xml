@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.IEmployeeDao" >
+    <resultMap id="BaseResultMap" type="employee" >
+        <result property="employeeId" column="employeeId"/>
+        <result property="eName" column="ename"/>
+        <result property="eSex" column="esex"/>
+        <result property="eAge" column="eage"/>
+        <result property="ePhone" column="ephone"/>
+        <result property="eMoney" column="emoney"/>
+        <result property="eWokerAge" column="ewokerage"/>
+    </resultMap>
+   <sql id="Base_Column_List" >
+        employeeId,ename,esex,eage,ephone,emoney,ewokerage
+    </sql>
+    
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_employee where employeeId=#{employeeId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_employee 
+        where 1=1 
+        <if test="eName!=null and eName!=''">  
+        and INSTR(ename,#{eName}) &gt; 0
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer" parameterType="map">
+        select count(*) from t_employee
+        where 1=1 
+        <if test="eName!=null and eName!=''">  
+        and instr(ename,#{eName}) &gt; 0
+        </if>
+    </select>
+    
+    <insert id="employeeInsert" parameterType="employee">
+		insert into t_employee 
+		(employeeId,ename,esex,eage,ephone,emoney,ewokerage)
+		values
+		(#{employeeId},#{eName},#{eSex},#{eAge},#{ePhone},#{eMoney},#{eWokerAge})
+	</insert>
+	
+	
+	<update id="employeeUpdate" parameterType="employee">
+		update t_employee set
+			employeeId = #{employeeId},
+			ename = #{eName},
+			esex = #{eSex},
+			eage = #{eAge},
+			ephone = #{ePhone},
+			emoney = #{eMoney},
+			ewokerage = #{eWokerAge}
+		where
+			employeeId=#{employeeId}
+	</update>
+</mapper>

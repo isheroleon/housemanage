@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.IWantDao" >
+    <resultMap id="BaseResultMap" type="want" >
+        <result property="wantId" column="wantId"/>
+        <result property="wAddress" column="waddress"/>
+        <result property="wContacts" column="wcontacts"/>
+        <result property="wPrice" column="wprice"/>
+        <result property="wPhone" column="wphone"/>
+        <result property="wPricetype" column="wpricetype"/>
+        <result property="wType" column="wtype"/>
+    </resultMap>
+   <sql id="Base_Column_List" >
+        wantId,waddress,wcontacts,wprice,wphone,wpricetype,wtype
+    </sql>
+    
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_want where wantId=#{wantId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_want 
+        where 1=1 
+        <if test="wAddress!=null and wAddress!=''">  
+        and INSTR(waddress,#{wAddress}) &gt; 0
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer" parameterType="map">
+        select count(*) from t_want
+        where 1=1 
+        <if test="wAddress!=null and wAddress!=''">  
+        and instr(waddress,#{wAddress}) &gt; 0
+        </if>
+    </select>
+        <insert id="wantInsert" parameterType="want">
+		insert into t_want 
+		(waddress,wcontacts,wprice,wphone,wpricetype,wtype)
+		values
+		(#{wAddress},#{wContacts},#{wPrice},#{wPhone},#{wPricetype},#{wType})
+	</insert>
+	
+	
+	<update id="wantUpdate" parameterType="want">
+		update t_want set
+			waddress = #{wAddress},
+			wcontacts = #{wContacts},
+			wprice = #{wPrice},
+			wphone = #{wPhone},
+			wpricetype = #{wPricetype},
+			wtype = #{wType}
+		where
+			wantId=#{wantId}
+	</update>
+</mapper>

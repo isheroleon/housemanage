@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.ISellHouseDao" >
+    <resultMap id="BaseResultMap" type="sellHouse" >
+        <result property="sellHouseId" column="sellHouseId"/>
+        <result property="sAdress" column="sadress"/>
+        <result property="sContacts" column="scontacts"/>
+        <result property="sStatus" column="sstatus"/>
+        <result property="sPrice" column="sprice"/>
+        <result property="sPhone" column="sphone"/>
+        <result property="sType" column="stype"/>
+    </resultMap>
+   <sql id="Base_Column_List" >
+        sellHouseId,sadress,scontacts,sstatus,sprice,sphone,stype
+    </sql>
+    
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_sellhouse where sellHouseId=#{sellHouseId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_sellhouse 
+        where 1=1 
+        <if test="sadress!=null and sadress!=''">  
+        and INSTR(sAdress,#{sadress}) &gt; 0
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer" parameterType="map">
+        select count(*) from t_sellhouse
+        where 1=1 
+        <if test="sadress!=null and sadress!=''">  
+        and instr(sadress,#{sadress}) &gt; 0
+        </if>
+    </select>
+    
+    <insert id="sellHouseInsert" parameterType="sellHouse">
+		insert into t_sellhouse 
+		(sadress,scontacts,sstatus,sprice,sphone,stype)
+		values
+		(#{sAdress},#{sContacts},#{sStatus},#{sPrice},#{sPhone},#{sType})
+	</insert>
+		
+	<update id="sellHouseUpdate" parameterType="sellHouse">
+		update t_sellhouse set
+			sadress = #{sAdress},
+			scontacts = #{bPrice},
+			sstatus = #{sStatus},
+			sprice = #{sPrice},
+			sphone = #{sPhone},
+			stype = #{sType}
+		where
+			sellHouseId=#{sellHouseId}
+	</update>    
+</mapper>

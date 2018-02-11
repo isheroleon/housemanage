@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.ISearchHouseDao" >
+    <resultMap id="BaseResultMap" type="searchHouse" >
+        <result property="searchHouseId" column="searchhouseId"/>
+        <result property="sAddress" column="saddress"/>
+        <result property="sContacts" column="scontacts"/>
+        <result property="sPrice" column="sprice"/>
+        <result property="sPhone" column="sphone"/>
+        <result property="sType" column="stype"/>
+    </resultMap>
+   <sql id="Base_Column_List" >
+        searchhouseId,saddress,scontacts,sprice,sphone,stype
+    </sql>
+    
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_searchhouse where searchHouseId=#{searchHouseId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_searchhouse 
+        where 1=1 
+        <if test="sAddress!=null and sAddress!=''">  
+        and INSTR(saddress,#{sAddress}) &gt; 0
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer" parameterType="map">
+        select count(*) from t_searchhouse
+        where 1=1 
+        <if test="sAddress!=null and sAddress!=''">  
+        and instr(saddress,#{sAddress}) &gt; 0
+        </if>
+    </select>
+    
+    <insert id="searchHouseInsert" parameterType="searchHouse">
+		insert into t_searchhouse 
+		(saddress,scontacts,sprice,sphone,stype)
+		values
+		(#{sAddress},#{sContacts},#{sPrice},#{sPhone},#{sType})
+	</insert>
+		
+	<update id="searchHouseUpdate" parameterType="searchHouse">
+		update t_searchhouse set
+			saddress = #{sAddress},
+			scontacts = #{bPrice},
+			sprice = #{bStatus},
+			sphone = #{sphone},
+			stype = #{stype}
+		where
+			searchHouseId=#{searchHouseId}
+	</update>    
+</mapper>

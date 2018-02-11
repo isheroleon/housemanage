@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.IPermissionDao" >
+    <resultMap id="BaseResultMap" type="permission" >
+        <result property="id" column="id"/>
+        <result property="permissionName" column="permissionName"/>
+        <result property="roleId" column="roleId"/>
+        <result property="uri" column="uri"/>
+        <result property="name" column="name"/>
+        <result property="nfatherId" column="nfatherId"/>
+        <result property="isMenu" column="isMenu"/>
+    </resultMap>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_permission where roleId=#{roleId} limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer">
+        select count(*) from t_permission
+    </select>
+    
+    <select id="getMeun" resultMap="BaseResultMap" parameterType="map">
+    	select * from t_permission where nfatherId=#{nfatherId} and roleId=#{roleId} and isMenu=#{isMenu}
+    </select>
+</mapper>

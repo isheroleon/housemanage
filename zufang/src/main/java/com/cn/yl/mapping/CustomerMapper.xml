@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.ICustomerDao" >
+    <resultMap id="BaseResultMap" type="customer" >
+        <result property="customerId" column="customerId"/>
+        <result property="cName" column="cname"/>
+        <result property="cSex" column="csex"/>
+        <result property="cEmail" column="cemail"/>
+        <result property="cPhone" column="cphone"/>
+    </resultMap>
+   <sql id="Base_Column_List" >
+        customerId,cname,csex,cemail,cphone
+    </sql>
+    
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_customer where customerId=#{customerId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_customer 
+        where 1=1 
+        <if test="cName!=null and cName!=''">  
+        and INSTR(cname,#{cName}) &gt; 0
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer" parameterType="map">
+        select count(*) from t_customer
+        where 1=1 
+        <if test="cName!=null and cName!=''">  
+        and instr(cname,#{cName}) &gt; 0
+        </if>
+    </select>
+    
+    <insert id="customerInsert" parameterType="customer">
+		insert into t_customer 
+		(cname,csex,cemail,cphone)
+		values
+		(#{cName},#{cSex},#{cEmail},#{cPhone})
+	</insert>
+	
+	<update id="customerUpdate" parameterType="customer">
+		update t_customer set
+			cname = #{cName},
+			csex = #{cSex},
+			cemail = #{cEmail},
+			cphone = #{cPhone}
+		where
+			customerId=#{customerId}
+	</update>
+</mapper>

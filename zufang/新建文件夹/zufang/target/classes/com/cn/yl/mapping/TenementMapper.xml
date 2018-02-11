@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.ITenementDao" >
+    <resultMap id="BaseResultMap" type="tenement" >
+        <result property="tenementId" column="tenementId"/>
+        <result property="tAddress" column="taddress"/>
+        <result property="tContacts" column="tcontacts"/>
+        <result property="tPrice" column="tprice"/>
+        <result property="tPhone" column="tphone"/>
+        <result property="tPriceType" column="tpriceType"/>
+        <result property="tType" column="ttype"/>
+    </resultMap>
+   <sql id="Base_Column_List" >
+        tenementId,taddress,tcontacts,tprice,tphone,tpriceType,ttype
+    </sql>
+    
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_tenement where tenementId=#{tenementId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_tenement 
+        where 1=1 
+        <if test="tAddress!=null and tAddress!=''">  
+        and INSTR(taddress,#{tAddress}) &gt; 0
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer" parameterType="map">
+        select count(*) from t_tenement
+        where 1=1 
+        <if test="tAddress!=null and tAddress!=''">  
+        and instr(taddress,#{tAddress}) &gt; 0
+        </if>
+    </select>
+    
+    <insert id="tenementInsert" parameterType="tenement">
+		insert into t_tenement 
+		(taddress,tcontacts,tprice,tphone,tpriceType,ttype)
+		values
+		(#{tAddress},#{tContacts},#{tPrice},#{tPhone},#{tPriceType},#{tType})
+	</insert>
+	
+	
+	<update id="tenementUpdate" parameterType="tenement">
+		update t_tenement set
+			taddress = #{tAddress},
+			tcontacts = #{tContacts},
+			tprice = #{tPrice},
+			tphone = #{tPhone},
+			tpriceType = #{tPriceType},
+			ttype = #{tType}
+		where
+			tenementId=#{tenementId}
+	</update>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.yl.dao.IBuildDao" >
+    <resultMap id="BaseResultMap" type="build" >
+        <result property="buildId" column="buildId"/>
+        <result property="bLlocaltion" column="blocaltion"/>
+        <result property="bPrice" column="bprice"/>
+        <result property="bStatus" column="bstatus"/>
+        <result property="bPhone" column="bphone"/>
+    </resultMap>
+   <sql id="Base_Column_List" >
+        buildId,blocaltion,bprice,bstatus,bphone
+    </sql>
+    
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_build where buildId=#{buildId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap" parameterType="map">
+        select * from t_build 
+        where 1=1 
+        <if test="bLlocaltion!=null and bLlocaltion!=''">  
+        and INSTR(blocaltion,#{bLlocaltion}) &gt; 0
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="getCount" resultType="Integer" parameterType="map">
+        select count(*) from t_build
+        where 1=1 
+        <if test="bLlocaltion!=null and bLlocaltion!=''">  
+        and instr(blocaltion,#{bLlocaltion}) &gt; 0
+        </if>
+    </select>
+    
+    <insert id="buildInsert" parameterType="build">
+		insert into t_build 
+		(blocaltion,bprice,bstatus,bphone)
+		values
+		(#{bLlocaltion},#{bPrice},#{bStatus},#{bPhone})
+	</insert>
+		
+	<update id="buildUpdate" parameterType="build">
+		update t_build set
+			blocaltion = #{bLlocaltion},
+			bprice = #{bPrice},
+			bstatus = #{bStatus},
+			bphone = #{bPhone}
+		where
+			buildId=#{buildId}
+	</update>    
+</mapper>
